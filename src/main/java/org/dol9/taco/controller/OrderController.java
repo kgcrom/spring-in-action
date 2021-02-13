@@ -1,13 +1,19 @@
 package org.dol9.taco.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.dol9.taco.config.OrderProps;
 import org.dol9.taco.entity.Order;
 import org.dol9.taco.entity.User;
 import org.dol9.taco.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,9 +32,20 @@ public class OrderController {
 
   private OrderRepository orderRepository;
 
-  public OrderController(OrderRepository orderRepository) {
+  private OrderProps orderProps;
+
+  public OrderController(OrderRepository orderRepository, OrderProps orderProps) {
     this.orderRepository = orderRepository;
+    this.orderProps = orderProps;
   }
+
+  @GetMapping
+  public String orderForUser(@AuthenticationPrincipal User user, Model model) {
+    Pageable pageable = PageRequest.of(0, orderProps.getPageSize());
+    model.addAttribute("orders", orderRepository.findByUserOrderByPlacedAtDesc(user, pageable));
+    return "orderList";
+  }
+
 
   @GetMapping("/current")
   public String orderForm(@ModelAttribute Order order) {

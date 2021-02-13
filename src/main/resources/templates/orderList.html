@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Taco Cloud</title>
+    <link ref="stylesheet" th:href="@{css/style.css}" />
 </head>
 <body>
-<h1>Welcome to...</h1>
-<img th:src="@{images/taco.png}" width="50%"/>
+<div th:each="order : ${orders}">
+    <span th:text="${order.deliveryName}">deliveryName</span>
+</div>
 </body>
 </html>

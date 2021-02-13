@@ -1,6 +1,5 @@
 package org.dol9.taco.config;
 
-import org.dol9.taco.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+  @Qualifier("userDetailServiceImpl")
   @Autowired
-  private UserDetailServiceImpl userDetailsService;
+  private UserDetailsService userDetailsService;
 
   @Bean
   public PasswordEncoder encoder() {

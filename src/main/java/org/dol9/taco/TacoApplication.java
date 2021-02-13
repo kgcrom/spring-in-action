@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
@@ -21,6 +22,7 @@ public class TacoApplication {
   // TODO crud repository와 jpa repository의 차이점은?
   // TODO QueryDSL도 한번 사용해보기
   @Bean
+  @Profile("local")
   public CommandLineRunner dataLoader(IngredientRepository repo) {
     return new CommandLineRunner() {
       @Override
@@ -40,6 +42,7 @@ public class TacoApplication {
   }
 
   @Bean
+  @Profile("!prod")
   public CommandLineRunner dataLoader1(UserRepository repo) {
     return new CommandLineRunner() {
       @Override

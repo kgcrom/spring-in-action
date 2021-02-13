@@ -1,0 +1,6 @@
+spring:
+  config:
+    name: production
+  h2:
+    console:
+      enabled: true
