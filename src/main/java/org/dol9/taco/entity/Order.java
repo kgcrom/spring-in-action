@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
@@ -31,6 +32,9 @@ public class Order implements Serializable {
 
   private Date placedAt;
 
+  @ManyToOne
+  private User user;
+
   @ManyToMany
   private List<Taco> tacos = new ArrayList<>();
 
@@ -44,6 +48,7 @@ public class Order implements Serializable {
   private String deliveryState;
   @NotBlank(message = "Zip is required")
   private String deliveryZip;
+  // https://www.validcreditcardnumber.com/  example: Visa=>4111111111111111
   @CreditCardNumber(message = "Not a valid credit card number")
   private String ccNumber;
   @Pattern(regexp = "^(0[1-9]1[0-2]|1[0-2])([\\/])([1-9][0-9])$", message = "Must be formatted MM/YY")

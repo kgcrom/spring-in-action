@@ -4,8 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.dol9.taco.entity.Ingredient;
 import org.dol9.taco.entity.Order;
 import org.dol9.taco.entity.Taco;
+import org.dol9.taco.entity.User;
 import org.dol9.taco.repository.IngredientRepository;
 import org.dol9.taco.repository.TacoRepository;
+import org.dol9.taco.repository.UserRepository;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -29,10 +32,12 @@ public class DesignTacoController {
 
   private final IngredientRepository ingredientRepository;
   private TacoRepository tacoRepository;
+  private UserRepository userRepository;
 
-  public DesignTacoController(IngredientRepository ingredientRepository, TacoRepository tacoRepository) {
+  public DesignTacoController(IngredientRepository ingredientRepository, TacoRepository tacoRepository, UserRepository userRepository) {
     this.ingredientRepository = ingredientRepository;
     this.tacoRepository = tacoRepository;
+    this.userRepository = userRepository;
   }
 
   @ModelAttribute(name = "order")
@@ -46,7 +51,7 @@ public class DesignTacoController {
   }
 
   @GetMapping
-  public String showDesignFrom(Model model) {
+  public String showDesignFrom(Model model, @AuthenticationPrincipal User user) {
     List<Ingredient> ingredients = new ArrayList<>();
     ingredientRepository.findAll().forEach(v -> ingredients.add(v));
 
@@ -55,7 +60,8 @@ public class DesignTacoController {
       model.addAttribute(type.name().toLowerCase(), filterByType(ingredients, type));
     }
 
-    model.addAttribute("taco", new Taco());
+    model.addAttribute("taco", taco());
+    model.addAttribute("user", user);
     return "design";
   }
 
